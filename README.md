@@ -25,6 +25,16 @@ The calculator has a stack that contains real numbers.
 ## Usage
 
 ```bash
-$ ./gradlew test
-$ ./gradlew run
+$ ./gradlew build
+$ ./rpn-calculator.sh
 ```
+
+## Design
+
+This sort of problem is well geared towards an EDA. Pump input through a set of streams/reactive functions and print 
+the result. However for simplicity this app uses just a simple Lexer/Calculator combination.
+
+## Assumptions
+
+No mention was made in the requirements about what to do about invalid input. Invalid input stops the processing of 
+the string, prints a message and the stack contents.
