@@ -16,10 +16,10 @@ import org.quasar.rpn.tokens.OperatorToken;
 import org.quasar.rpn.tokens.Token;
 
 public class Calculator {
-  private Stack<Operation> stack;
+  private Stack<Operation> operations;
 
   public Calculator() {
-    this.stack = new Stack<>();
+    this.operations = new Stack<>();
   }
 
   public void push(final Token token) {
@@ -46,7 +46,7 @@ public class Calculator {
   }
 
   public void push(final NumberToken token) {
-    this.stack.add(new PushNumberOperation(token));
+    this.operations.add(new PushNumberOperation(token));
   }
 
   public void push(final InvalidInputToken token) {
@@ -56,14 +56,14 @@ public class Calculator {
   public void push(final CommandToken token) {
     switch (token.command) {
       case UNDO:
-        if (stack.size() > 0) {
-          stack.addAll(stack.pop().undo());
+        if (operations.size() > 0) {
+          operations.addAll(operations.pop().undo());
         }
 
         return;
 
       case CLEAR:
-        stack.clear();
+        operations.clear();
     }
   }
 
@@ -84,27 +84,27 @@ public class Calculator {
    * @return A copy of the calculator's state.
    */
   public List<BigDecimal> getState() {
-    return stack.stream()
+    return operations.stream()
       .map(Operation::getValue)
       .collect(Collectors.toList());
   }
 
   private void doUniOperandOperation(final OperatorToken token) {
-    if (stack.size() < 1) {
+    if (operations.size() < 1) {
       throw new InsufficientOperatorParametersException(token);
     }
 
-    stack.push(new UniOperandArithmeticOperation(token, stack.pop()));
+    operations.push(new UniOperandArithmeticOperation(token, operations.pop()));
   }
 
   private void doBiOperandOperation(final OperatorToken token) {
-    if (stack.size() < 2) {
+    if (operations.size() < 2) {
       throw new InsufficientOperatorParametersException(token);
     }
 
-    final Operation b = stack.pop();
-    final Operation a = stack.pop();
+    final Operation b = operations.pop();
+    final Operation a = operations.pop();
 
-    stack.push(new BiOperandArithmeticOperation(token, a, b));
+    operations.push(new BiOperandArithmeticOperation(token, a, b));
   }
 }
