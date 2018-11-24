@@ -3,16 +3,18 @@ package org.quasar.rpn;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.quasar.rpn.TokenFactory.givenCommandToken;
+import static org.quasar.rpn.TokenFactory.givenInvalidInput;
+import static org.quasar.rpn.TokenFactory.givenNumberToken;
+import static org.quasar.rpn.TokenFactory.givenOperatorToken;
+import static org.quasar.rpn.TokenFactory.givenToken;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.quasar.rpn.tokens.CommandToken;
 import org.quasar.rpn.tokens.CommandToken.Commands;
-import org.quasar.rpn.tokens.InvalidInputToken;
-import org.quasar.rpn.tokens.NumberToken;
-import org.quasar.rpn.tokens.OperatorToken;
 import org.quasar.rpn.tokens.OperatorToken.Operators;
 
 public class CalculatorTest {
@@ -47,50 +49,6 @@ public class CalculatorTest {
   }
 
   @Test
-  public void shouldPerformSquareRoot() {
-    calc.push(givenNumberToken(4));
-    calc.push(givenOperatorToken(Operators.SQUARE_ROOT));
-
-    assertThat(calc.getState(), hasItem(new BigDecimal(2)));
-  }
-
-  @Test
-  public void shouldPerformAddition() {
-    calc.push(givenNumberToken(1));
-    calc.push(givenNumberToken(2));
-    calc.push(givenOperatorToken(Operators.ADDITION));
-
-    assertThat(calc.getState(), hasItem(new BigDecimal(3)));
-  }
-
-  @Test
-  public void shouldPerformSubtraction() {
-    calc.push(givenNumberToken(2));
-    calc.push(givenNumberToken(1));
-    calc.push(givenOperatorToken(Operators.SUBTRACTION));
-
-    assertThat(calc.getState(), hasItem(new BigDecimal(1)));
-  }
-
-  @Test
-  public void shouldPerformMultiplication() {
-    calc.push(givenNumberToken(1));
-    calc.push(givenNumberToken(2));
-    calc.push(givenOperatorToken(Operators.MULTIPLICATION));
-
-    assertThat(calc.getState(), hasItem(new BigDecimal(2)));
-  }
-
-  @Test
-  public void shouldPerformDivision() {
-    calc.push(givenNumberToken(42));
-    calc.push(givenNumberToken(4));
-    calc.push(givenOperatorToken(Operators.DIVISION));
-
-    assertThat(calc.getState(), hasItem(new BigDecimal(10.5)));
-  }
-
-  @Test
   public void shouldClearCalculator() {
     calc.push(givenNumberToken(12));
     calc.push(givenCommandToken(Commands.CLEAR));
@@ -99,7 +57,7 @@ public class CalculatorTest {
   }
 
   @Test
-  public void shouldUndoPush() {
+  public void shouldUndoSimplePush() {
     calc.push(givenNumberToken(12));
     calc.push(givenNumberToken(23));
     calc.push(givenCommandToken(Commands.UNDO));
@@ -110,29 +68,25 @@ public class CalculatorTest {
   }
 
   @Test
+  public void shouldUndoCompositeOperations() {
+    calc.push(givenNumberToken(5));
+    calc.push(givenNumberToken(4));
+    calc.push(givenOperatorToken(Operators.MULTIPLICATION));
+    calc.push(givenNumberToken(5));
+    calc.push(givenOperatorToken(Operators.MULTIPLICATION));
+    calc.push(givenCommandToken(Commands.UNDO));
+
+    final List<BigDecimal> state = calc.getState();
+    assertThat(state.size(), is(2));
+
+    assertThat(state.get(0), is(new BigDecimal(20)));
+    assertThat(state.get(1), is(new BigDecimal(5)));
+  }
+
+  @Test
   public void shouldIgnoreUndoOnEmptyStack() {
     calc.push(givenCommandToken(Commands.UNDO));
 
     assertThat(calc.getState().size(), is(0));
-  }
-
-  private NumberToken givenNumberToken(int value) {
-    return new NumberToken(new BigDecimal(value), String.valueOf(value), -1);
-  }
-
-  private OperatorToken givenOperatorToken(final Operators op) {
-    return new OperatorToken(op, op.token, -1);
-  }
-
-  private CommandToken givenCommandToken(final Commands command) {
-    return new CommandToken(command, command.token, -1);
-  }
-
-  private InvalidInputToken givenInvalidInput() {
-    return new InvalidInputToken("foo", -1);
-  }
-
-  private Token givenToken() {
-    return new Token("foo", -1);
   }
 }

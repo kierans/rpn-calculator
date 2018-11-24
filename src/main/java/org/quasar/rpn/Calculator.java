@@ -1,18 +1,21 @@
 package org.quasar.rpn;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
+import org.quasar.rpn.operations.BiOperandArithmeticOperation;
+import org.quasar.rpn.operations.Operation;
+import org.quasar.rpn.operations.PushNumberOperation;
+import org.quasar.rpn.operations.UniOperandArithmeticOperation;
 import org.quasar.rpn.tokens.CommandToken;
 import org.quasar.rpn.tokens.InvalidInputToken;
 import org.quasar.rpn.tokens.NumberToken;
 import org.quasar.rpn.tokens.OperatorToken;
 
 public class Calculator {
-  private Stack<BigDecimal> stack;
+  private Stack<Operation> stack;
 
   public Calculator() {
     this.stack = new Stack<>();
@@ -42,7 +45,7 @@ public class Calculator {
   }
 
   public void push(final NumberToken token) {
-    this.stack.add(token.number);
+    this.stack.add(new PushNumberOperation(token));
   }
 
   public void push(final InvalidInputToken token) {
@@ -53,7 +56,7 @@ public class Calculator {
     switch (token.command) {
       case UNDO:
         if (stack.size() > 0) {
-          stack.pop();
+          stack.addAll(stack.pop().undo());
         }
 
         return;
@@ -80,7 +83,9 @@ public class Calculator {
    * @return A copy of the calculator's state.
    */
   public List<BigDecimal> getState() {
-    return new ArrayList<>(stack);
+    return stack.stream()
+      .map(Operation::getValue)
+      .collect(Collectors.toList());
   }
 
   private void doUniOperandOperation(final OperatorToken token) {
@@ -88,14 +93,7 @@ public class Calculator {
       throw new InsufficientOperatorParametersException(token);
     }
 
-    final BigDecimal a = stack.pop();
-
-    /*
-     * Currently we only have one uni operator.
-     *
-     * Math.sqrt should be sufficient without losing precision
-     */
-    stack.push(new BigDecimal(Math.sqrt(a.doubleValue())));
+    stack.push(new UniOperandArithmeticOperation(token, stack.pop()));
   }
 
   private void doBiOperandOperation(final OperatorToken token) {
@@ -103,27 +101,9 @@ public class Calculator {
       throw new InsufficientOperatorParametersException(token);
     }
 
-    final BigDecimal b = stack.pop();
-    final BigDecimal a = stack.pop();
+    final Operation b = stack.pop();
+    final Operation a = stack.pop();
 
-    switch (token.op) {
-      case ADDITION:
-        stack.push(a.add(b));
-
-        return;
-
-      case SUBTRACTION:
-        stack.push(a.subtract(b));
-
-        return;
-
-      case MULTIPLICATION:
-        stack.push(a.multiply(b));
-
-        return;
-
-      case DIVISION:
-        stack.push(new BigDecimal(a.doubleValue() / b.doubleValue()));
-    }
+    stack.push(new BiOperandArithmeticOperation(token, a, b));
   }
 }
