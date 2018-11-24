@@ -1,8 +1,8 @@
 package org.quasar.rpn;
 
 import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.Arrays;
@@ -16,6 +16,7 @@ import org.quasar.rpn.tokens.CommandToken;
 import org.quasar.rpn.tokens.InvalidInputToken;
 import org.quasar.rpn.tokens.NumberToken;
 import org.quasar.rpn.tokens.OperatorToken;
+import org.quasar.rpn.tokens.Token;
 
 public class LexerTest {
   private Lexer lexer = new Lexer();

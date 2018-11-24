@@ -13,6 +13,7 @@ import org.quasar.rpn.tokens.CommandToken;
 import org.quasar.rpn.tokens.InvalidInputToken;
 import org.quasar.rpn.tokens.NumberToken;
 import org.quasar.rpn.tokens.OperatorToken;
+import org.quasar.rpn.tokens.Token;
 
 public class Calculator {
   private Stack<Operation> stack;

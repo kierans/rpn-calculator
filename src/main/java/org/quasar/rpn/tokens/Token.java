@@ -1,4 +1,4 @@
-package org.quasar.rpn;
+package org.quasar.rpn.tokens;
 
 import lombok.AllArgsConstructor;
 import lombok.ToString;

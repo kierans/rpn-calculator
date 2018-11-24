@@ -3,7 +3,6 @@ package org.quasar.rpn.tokens;
 import java.math.BigDecimal;
 
 import lombok.ToString;
-import org.quasar.rpn.Token;
 
 @ToString(callSuper = true)
 public class NumberToken extends Token {

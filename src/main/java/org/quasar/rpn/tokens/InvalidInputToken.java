@@ -1,7 +1,6 @@
 package org.quasar.rpn.tokens;
 
 import lombok.ToString;
-import org.quasar.rpn.Token;
 
 @ToString(callSuper = true)
 public class InvalidInputToken extends Token {
