@@ -24,6 +24,12 @@ The calculator has a stack that contains real numbers.
  
 ## Usage
 
+### Requirements
+
+Uses Java 8.
+
+### Run
+
 ```bash
 $ ./gradlew build
 $ ./rpn-calculator.sh
