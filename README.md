@@ -1,4 +1,4 @@
-#RPN Calculator
+# RPN Calculator
 
 A RPN (Reverse Polish Notation) command-line based RPN calculator.
 
