@@ -21,6 +21,11 @@ public class UniOperandArithmeticOperation extends ArithmeticOperation {
   }
 
   @Override
+  public String asExpression() {
+    return String.format("%s %s", operand.getValue(), op.input);
+  }
+
+  @Override
   protected BigDecimal doOperation(final OperatorToken op) {
     /*
      * Currently we only have one uni operator.

@@ -23,6 +23,11 @@ public class BiOperandArithmeticOperation extends ArithmeticOperation {
   }
 
   @Override
+  public String asExpression() {
+    return String.format("%s %s %s", a.getValue(), b.getValue(), this.op.input);
+  }
+
+  @Override
   protected BigDecimal doOperation(final OperatorToken token) {
     switch (token.op) {
       case ADDITION:

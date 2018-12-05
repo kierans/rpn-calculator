@@ -22,4 +22,9 @@ public class PushNumberOperation implements Operation {
   public List<Operation> undo() {
     return Collections.emptyList();
   }
+
+  @Override
+  public String asExpression() {
+    return token.input;
+  }
 }

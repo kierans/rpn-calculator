@@ -20,4 +20,9 @@ public interface Operation {
    * @return Component parts of the operation.
    */
   public List<Operation> undo();
+
+  /**
+   * @return A string representation of the operation.
+   */
+  public String asExpression();
 }

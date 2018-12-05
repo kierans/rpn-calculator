@@ -23,6 +23,18 @@ public class BiOperandArithmeticOperationsTest {
   }
 
   @Test
+  public void shouldReturnOperationAsExpression() {
+    final Operators operator = Operators.ADDITION;
+    final int a = 1;
+    final int b = 2;
+
+    op = new BiOperandArithmeticOperation(givenOperatorToken(operator), givenNumberOperation(a),
+      givenNumberOperation(b));
+
+    assertThat(op.asExpression(), is(String.format("%d %d %s", a, b, operator.token)));
+  }
+
+  @Test
   public void shouldPerformAddition() {
     op = new BiOperandArithmeticOperation(givenOperatorToken(Operators.ADDITION), givenNumberOperation(1),
         givenNumberOperation(2));

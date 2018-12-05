@@ -24,5 +24,10 @@ public class OperationFactory {
     public List<Operation> undo() {
       throw new UnsupportedOperationException();
     }
+
+    @Override
+    public String asExpression() {
+      return value.toString();
+    }
   }
 }

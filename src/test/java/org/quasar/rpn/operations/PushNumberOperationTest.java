@@ -27,4 +27,13 @@ public class PushNumberOperationTest {
 
     assertThat(op.undo().isEmpty(), is(true));
   }
+
+  @Test
+  public void shouldReturnTokenValueAsExpression() {
+    final int value = 36;
+
+    final PushNumberOperation op = new PushNumberOperation(givenNumberToken(value));
+
+    assertThat(op.asExpression(), is(String.valueOf(value)));
+  }
 }
