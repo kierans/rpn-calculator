@@ -6,7 +6,8 @@ import org.quasar.rpn.tokens.OperatorToken;
 
 public abstract class ArithmeticOperation implements Operation {
   public final OperatorToken op;
-  public BigDecimal result;
+
+  private BigDecimal result;
 
   public ArithmeticOperation(final OperatorToken op) {
     this.op = op;
