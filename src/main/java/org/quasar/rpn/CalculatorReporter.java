@@ -21,6 +21,10 @@ public class CalculatorReporter {
     return String.format("operator %s (position: %d): insufficient parameters", operatorToken.input, operatorToken.position);
   }
 
+  public String format(final IllegalArithmeticOperationException e) {
+    return "operation '" + e.operation.asExpression() + "' is illegal";
+  }
+
   public String format(final InvalidInputException ex) {
     final InvalidInputToken token = ex.token;
 

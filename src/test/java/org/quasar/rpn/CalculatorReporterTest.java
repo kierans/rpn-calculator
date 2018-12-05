@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+import org.quasar.rpn.operations.Operation;
+import org.quasar.rpn.operations.OperationFactory;
 import org.quasar.rpn.tokens.InvalidInputToken;
 import org.quasar.rpn.tokens.OperatorToken;
 import org.quasar.rpn.tokens.OperatorToken.Operators;
@@ -32,6 +34,16 @@ public class CalculatorReporterTest {
     final String message = reporter.format(ex);
 
     assertThat(message, is("operator * (position: 45): insufficient parameters"));
+  }
+
+  @Test
+  public void shouldFormatIllegalArithmeticOperation() {
+    final Operation operation = OperationFactory.givenNumberOperation(4);
+    final IllegalArithmeticOperationException ex = new IllegalArithmeticOperationException(operation, new Exception());
+
+    final String message = reporter.format(ex);
+
+    assertThat(message, is("operation '" + operation.asExpression() + "' is illegal"));
   }
 
   @Test
