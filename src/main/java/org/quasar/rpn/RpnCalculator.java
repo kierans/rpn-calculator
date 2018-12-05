@@ -23,6 +23,9 @@ public class RpnCalculator {
       catch (InsufficientOperatorParametersException e) {
         System.out.println(reporter.format(e));
       }
+      catch (IllegalArithmeticOperationException e) {
+        System.out.println(reporter.format(e));
+      }
       catch (InvalidInputException e) {
         System.out.println(reporter.format(e));
       }
