@@ -19,6 +19,8 @@ The calculator has a stack that contains real numbers.
  - All numbers are formatted as plain decimal strings (ie. no engineering formatting).
  - If an operator cannot find a sufficient number of parameters on the stack, a warning is displayed: `operator 
  <operator> (position: <pos>): insufficient parameters`
+ - If an illegal arithmetic operation is attempted (eg: divide by 0), a warning is displayed eg: `operation '1 0 /' 
+ is illegal`. Processing of the input string is stopped, and the illegal operation is undone to allow recovery.
  - After displaying the warning, all further processing of the string terminates and the current state of the stack is 
  displayed.
  
