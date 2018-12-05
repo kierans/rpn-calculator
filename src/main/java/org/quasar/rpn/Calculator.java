@@ -95,8 +95,7 @@ public class Calculator {
       throw new InsufficientOperatorParametersException(token);
     }
 
-    final UniOperandArithmeticOperation op = new UniOperandArithmeticOperation(token, operations.pop());
-    computeOperationValue(op);
+    computeOperationValue(new UniOperandArithmeticOperation(token, operations.pop()));
   }
 
   private void doBiOperandOperation(final OperatorToken token) {
@@ -107,8 +106,7 @@ public class Calculator {
     final Operation b = operations.pop();
     final Operation a = operations.pop();
 
-    final BiOperandArithmeticOperation op = new BiOperandArithmeticOperation(token, a, b);
-    computeOperationValue(op);
+    computeOperationValue(new BiOperandArithmeticOperation(token, a, b));
   }
 
   private void computeOperationValue(final ArithmeticOperation op) {
