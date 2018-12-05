@@ -29,6 +29,8 @@ public class UniOperandArithmeticOperationTest {
 
   @Test
   public void shouldPerformSquareRoot() {
+    op.computeValue();
+
     assertThat(op.getValue(), is(new BigDecimal(2)));
   }
 

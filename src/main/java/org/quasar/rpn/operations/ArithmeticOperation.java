@@ -16,10 +16,14 @@ public abstract class ArithmeticOperation implements Operation {
   @Override
   public BigDecimal getValue() {
     if (result == null) {
-      result = doOperation(op);
+      throw new IllegalStateException("Can't return value before computing it");
     }
 
     return result;
+  }
+
+  public void computeValue() {
+    result = doOperation(op);
   }
 
   protected abstract BigDecimal doOperation(final OperatorToken op);

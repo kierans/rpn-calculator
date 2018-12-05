@@ -20,7 +20,7 @@ public class BiOperandArithmeticOperationsTest {
     op = new BiOperandArithmeticOperation(givenOperatorToken(Operators.SQUARE_ROOT), givenNumberOperation(1),
         givenNumberOperation(1));
 
-    op.getValue();
+    op.computeValue();
   }
 
   @Test(expected = IllegalArithmeticOperationException.class)
@@ -29,7 +29,7 @@ public class BiOperandArithmeticOperationsTest {
     op = new BiOperandArithmeticOperation(givenOperatorToken(Operators.DIVISION), givenNumberOperation(1),
         givenNumberOperation(0));
 
-    op.getValue();
+    op.computeValue();
   }
 
   @Test
@@ -49,6 +49,8 @@ public class BiOperandArithmeticOperationsTest {
     op = new BiOperandArithmeticOperation(givenOperatorToken(Operators.ADDITION), givenNumberOperation(1),
         givenNumberOperation(2));
 
+    op.computeValue();
+
     assertThat(op.getValue(), is(new BigDecimal(3)));
   }
 
@@ -56,6 +58,8 @@ public class BiOperandArithmeticOperationsTest {
   public void shouldPerformSubtraction() {
     op = new BiOperandArithmeticOperation(givenOperatorToken(Operators.SUBTRACTION), givenNumberOperation(2),
         givenNumberOperation(1));
+
+    op.computeValue();
 
     assertThat(op.getValue(), is(new BigDecimal(1)));
   }
@@ -65,6 +69,8 @@ public class BiOperandArithmeticOperationsTest {
     op = new BiOperandArithmeticOperation(givenOperatorToken(Operators.MULTIPLICATION), givenNumberOperation(1),
         givenNumberOperation(2));
 
+    op.computeValue();
+
     assertThat(op.getValue(), is(new BigDecimal(2)));
   }
 
@@ -72,6 +78,8 @@ public class BiOperandArithmeticOperationsTest {
   public void shouldPerformDivision() {
     op = new BiOperandArithmeticOperation(givenOperatorToken(Operators.DIVISION), givenNumberOperation(42),
         givenNumberOperation(4));
+
+    op.computeValue();
 
     assertThat(op.getValue(), is(new BigDecimal(10.5)));
   }
