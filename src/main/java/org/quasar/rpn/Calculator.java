@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
+import org.quasar.rpn.operations.ArithmeticOperation;
 import org.quasar.rpn.operations.BiOperandArithmeticOperation;
 import org.quasar.rpn.operations.Operation;
 import org.quasar.rpn.operations.PushNumberOperation;
@@ -57,7 +58,7 @@ public class Calculator {
     switch (token.command) {
       case UNDO:
         if (operations.size() > 0) {
-          operations.addAll(operations.pop().undo());
+          undoOperation(operations.pop());
         }
 
         return;
@@ -95,9 +96,7 @@ public class Calculator {
     }
 
     final UniOperandArithmeticOperation op = new UniOperandArithmeticOperation(token, operations.pop());
-    op.computeValue();
-
-    operations.push(op);
+    computeOperationValue(op);
   }
 
   private void doBiOperandOperation(final OperatorToken token) {
@@ -109,8 +108,22 @@ public class Calculator {
     final Operation a = operations.pop();
 
     final BiOperandArithmeticOperation op = new BiOperandArithmeticOperation(token, a, b);
-    op.computeValue();
+    computeOperationValue(op);
+  }
 
-    operations.push(op);
+  private void computeOperationValue(final ArithmeticOperation op) {
+    try {
+      op.computeValue();
+      operations.push(op);
+    }
+    catch (IllegalArithmeticOperationException e) {
+      undoOperation(op);
+
+      throw e;
+    }
+  }
+
+  private void undoOperation(final Operation op) {
+    operations.addAll(op.undo());
   }
 }

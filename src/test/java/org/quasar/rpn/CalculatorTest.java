@@ -3,6 +3,7 @@ package org.quasar.rpn;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.fail;
 import static org.quasar.rpn.TokenFactory.givenCommandToken;
 import static org.quasar.rpn.TokenFactory.givenInvalidInput;
 import static org.quasar.rpn.TokenFactory.givenNumberToken;
@@ -88,5 +89,27 @@ public class CalculatorTest {
     calc.push(givenCommandToken(Commands.UNDO));
 
     assertThat(calc.getState().size(), is(0));
+  }
+
+  @Test
+  public void shouldUndoIllegalOperation() {
+    calc.push(givenNumberToken(1));
+    calc.push(givenNumberToken(0));
+
+    try {
+      calc.push(givenOperatorToken(Operators.DIVISION));
+
+      fail("Calculator didn't throw the error");
+    }
+    catch (IllegalArithmeticOperationException e) {
+      // we don't care about the error here, just that we got here.
+    }
+    finally {
+      final List<BigDecimal> state = calc.getState();
+      assertThat(state.size(), is(2));
+
+      assertThat(state.get(0), is(new BigDecimal(1)));
+      assertThat(state.get(1), is(new BigDecimal(0)));
+    }
   }
 }
