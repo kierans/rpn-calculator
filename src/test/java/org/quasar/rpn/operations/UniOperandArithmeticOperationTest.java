@@ -1,18 +1,18 @@
 package org.quasar.rpn.operations;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.quasar.rpn.tokens.OperatorToken.Operators;
+
+import java.math.BigDecimal;
+
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.quasar.rpn.TokenFactory.givenOperatorToken;
 import static org.quasar.rpn.operations.OperationFactory.givenNumberOperation;
 
-import java.math.BigDecimal;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.quasar.rpn.tokens.OperatorToken.Operators;
-
-public class UniArithmeticOperationsTest {
+public class UniOperandArithmeticOperationTest {
   private UniOperandArithmeticOperation op;
   private Operation operand;
 
