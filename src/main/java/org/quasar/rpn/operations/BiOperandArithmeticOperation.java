@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import org.quasar.rpn.IllegalArithmeticOperationException;
 import org.quasar.rpn.tokens.OperatorToken;
 
 public class BiOperandArithmeticOperation extends ArithmeticOperation {
@@ -29,18 +30,23 @@ public class BiOperandArithmeticOperation extends ArithmeticOperation {
 
   @Override
   protected BigDecimal doOperation(final OperatorToken token) {
-    switch (token.op) {
-      case ADDITION:
-        return a.getValue().add(b.getValue());
+    try {
+      switch (token.op) {
+        case ADDITION:
+          return a.getValue().add(b.getValue());
 
-      case SUBTRACTION:
-        return a.getValue().subtract(b.getValue());
+        case SUBTRACTION:
+          return a.getValue().subtract(b.getValue());
 
-      case MULTIPLICATION:
-        return a.getValue().multiply(b.getValue());
+        case MULTIPLICATION:
+          return a.getValue().multiply(b.getValue());
 
-      case DIVISION:
-        return new BigDecimal(a.getValue().doubleValue() / b.getValue().doubleValue());
+        case DIVISION:
+          return new BigDecimal(a.getValue().doubleValue() / b.getValue().doubleValue());
+      }
+    }
+    catch (Exception e) {
+      throw new IllegalArithmeticOperationException(this, e);
     }
 
     throw new IllegalStateException(String.format("Can't operate on op %s", token));

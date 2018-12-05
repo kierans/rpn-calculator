@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.Test;
+import org.quasar.rpn.IllegalArithmeticOperationException;
 import org.quasar.rpn.tokens.OperatorToken.Operators;
 
 public class BiOperandArithmeticOperationsTest {
@@ -18,6 +19,15 @@ public class BiOperandArithmeticOperationsTest {
   public void shouldThrowErrorWhenOperatorTokenNotRecognised() {
     op = new BiOperandArithmeticOperation(givenOperatorToken(Operators.SQUARE_ROOT), givenNumberOperation(1),
         givenNumberOperation(1));
+
+    op.getValue();
+  }
+
+  @Test(expected = IllegalArithmeticOperationException.class)
+  public void shouldThrowErrorWhenIllegalOperationPerformed() {
+    // divide by 0
+    op = new BiOperandArithmeticOperation(givenOperatorToken(Operators.DIVISION), givenNumberOperation(1),
+        givenNumberOperation(0));
 
     op.getValue();
   }
