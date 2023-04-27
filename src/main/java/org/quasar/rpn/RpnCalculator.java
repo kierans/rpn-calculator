@@ -7,7 +7,7 @@ import java.util.Scanner;
  */
 public class RpnCalculator {
   public static void main(String[] args) {
-    Scanner scanner = new Scanner(System.in);
+    final Scanner scanner = new Scanner(System.in);
     final Lexer lexer = new Lexer();
     final Calculator calculator = new Calculator();
     final CalculatorReporter reporter = new CalculatorReporter();
