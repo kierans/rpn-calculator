@@ -15,7 +15,7 @@ public class RpnCalculator {
      * This is the simplest solution, but wouldn't be suited to a high volume environment.
      */
     while (true) {
-      System.out.println(calculator.calculate(scanner.nextLine()));
+      System.out.println(String.join("\n", calculator.calculate(scanner.nextLine())));
     }
   }
 }

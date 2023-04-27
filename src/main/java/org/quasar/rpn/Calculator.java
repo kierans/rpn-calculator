@@ -5,20 +5,25 @@ public class Calculator {
   private final Memory memory = new Memory();
   private final Reporter reporter = new Reporter();
 
-  public String calculate(String data) {
+  /**
+   * Performs calculations and returns the current calculator {@link Memory}.
+   * <p>
+   * The result will contain any error messages as well.
+   */
+  public String[] calculate(String data) {
     try {
       lexer.tokenise(data).forEach(memory::push);
 
-      return reporter.format(memory.getState());
+      return new String[] { reporter.format(memory.getState()) };
     }
     catch (InsufficientOperatorParametersException e) {
-      return reporter.format(e);
+      return new String[] { reporter.format(e), reporter.format(memory.getState()) };
     }
     catch (IllegalArithmeticOperationException e) {
-      return reporter.format(e);
+      return new String[] { reporter.format(e), reporter.format(memory.getState()) };
     }
     catch (InvalidInputException e) {
-      return reporter.format(e);
+      return new String[] { reporter.format(e), reporter.format(memory.getState()) };
     }
   }
 }
