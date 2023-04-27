@@ -3,6 +3,7 @@
 A RPN (Reverse Polish Notation) command-line based RPN calculator.
 
 The calculator has a stack that contains real numbers.
+
  - The calculator waits for user input and expects to receive strings containing whitespace separated lists of numbers 
  and operators.
  - Numbers are pushed on to the stack. Operators operate on numbers that are on the stack.
@@ -35,6 +36,12 @@ Uses Java 8.
 ```bash
 $ ./gradlew build
 $ ./rpn-calculator.sh
+```
+
+### Run tests
+
+```shell
+$ ./gradlew test
 ```
 
 ## Design
