@@ -9,7 +9,7 @@ public class RpnCalculator {
   public static void main(String[] args) {
     final Scanner scanner = new Scanner(System.in);
     final Lexer lexer = new Lexer();
-    final Calculator calculator = new Calculator();
+    final Memory memory = new Memory();
     final CalculatorReporter reporter = new CalculatorReporter();
 
     /*
@@ -18,7 +18,7 @@ public class RpnCalculator {
      */
     while (true) {
       try {
-        lexer.tokenise(scanner.nextLine()).forEach(calculator::push);
+        lexer.tokenise(scanner.nextLine()).forEach(memory::push);
       }
       catch (InsufficientOperatorParametersException e) {
         System.out.println(reporter.format(e));
@@ -30,7 +30,7 @@ public class RpnCalculator {
         System.out.println(reporter.format(e));
       }
       finally {
-        System.out.println(reporter.format(calculator.getState()));
+        System.out.println(reporter.format(memory.getState()));
       }
     }
   }

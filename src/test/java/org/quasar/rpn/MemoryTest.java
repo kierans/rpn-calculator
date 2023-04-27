@@ -18,66 +18,66 @@ import org.junit.Test;
 import org.quasar.rpn.tokens.CommandToken.Commands;
 import org.quasar.rpn.tokens.OperatorToken.Operators;
 
-public class CalculatorTest {
-  private Calculator calc;
+public class MemoryTest {
+  private Memory memory;
 
   @Before
   public void setUp() {
-    calc = new Calculator();
+    memory = new Memory();
   }
 
   @Test(expected = IllegalStateException.class)
   public void shouldThrowErrorWhenCalculatorCanNotProcessToken() {
-    calc.push(givenToken());
+    memory.push(givenToken());
   }
 
   @Test(expected = InsufficientOperatorParametersException.class)
   public void shouldThrowErrorWhenOperatorHasInsufficientParameters() {
-    calc.push(givenOperatorToken(Operators.ADDITION));
+    memory.push(givenOperatorToken(Operators.ADDITION));
   }
 
   @Test(expected = InvalidInputException.class)
   public void shouldThrowErrorWhenInvalidInputPushed() {
-    calc.push(givenInvalidInput());
+    memory.push(givenInvalidInput());
   }
 
   @Test
   public void shouldAcceptNumberToken() {
     final int value = 92;
-    calc.push(givenNumberToken(value));
+    memory.push(givenNumberToken(value));
 
-    assertThat(calc.getState(), hasItem(new BigDecimal(value)));
+    assertThat(memory.getState(), hasItem(new BigDecimal(value)));
   }
 
   @Test
   public void shouldClearCalculator() {
-    calc.push(givenNumberToken(12));
-    calc.push(givenCommandToken(Commands.CLEAR));
+    memory.push(givenNumberToken(12));
+    memory.push(givenCommandToken(Commands.CLEAR));
 
-    assertThat(calc.getState().size(), is(0));
+    assertThat(memory.getState().size(), is(0));
   }
 
   @Test
   public void shouldUndoSimplePush() {
-    calc.push(givenNumberToken(12));
-    calc.push(givenNumberToken(23));
-    calc.push(givenCommandToken(Commands.UNDO));
+    memory.push(givenNumberToken(12));
+    memory.push(givenNumberToken(23));
+    memory.push(givenCommandToken(Commands.UNDO));
 
-    assertThat(calc.getState().size(), is(1));
+    assertThat(memory.getState().size(), is(1));
 
-    assertThat(calc.getState(), hasItem(new BigDecimal(12)));
+    assertThat(memory.getState(), hasItem(new BigDecimal(12)));
   }
 
   @Test
   public void shouldUndoCompositeOperations() {
-    calc.push(givenNumberToken(5));
-    calc.push(givenNumberToken(4));
-    calc.push(givenOperatorToken(Operators.MULTIPLICATION));
-    calc.push(givenNumberToken(5));
-    calc.push(givenOperatorToken(Operators.MULTIPLICATION));
-    calc.push(givenCommandToken(Commands.UNDO));
+    memory.push(givenNumberToken(5));
+    memory.push(givenNumberToken(4));
+    memory.push(givenOperatorToken(Operators.MULTIPLICATION));
+    memory.push(givenNumberToken(5));
+    memory.push(givenOperatorToken(Operators.MULTIPLICATION));
+    memory.push(givenCommandToken(Commands.UNDO));
 
-    final List<BigDecimal> state = calc.getState();
+    final List<BigDecimal> state = memory.getState();
     assertThat(state.size(), is(2));
 
     assertThat(state.get(0), is(new BigDecimal(20)));
@@ -86,18 +86,18 @@ public class CalculatorTest {
 
   @Test
   public void shouldIgnoreUndoOnEmptyStack() {
-    calc.push(givenCommandToken(Commands.UNDO));
+    memory.push(givenCommandToken(Commands.UNDO));
 
-    assertThat(calc.getState().size(), is(0));
+    assertThat(memory.getState().size(), is(0));
   }
 
   @Test
   public void shouldUndoIllegalOperation() {
-    calc.push(givenNumberToken(1));
-    calc.push(givenNumberToken(0));
+    memory.push(givenNumberToken(1));
+    memory.push(givenNumberToken(0));
 
     try {
-      calc.push(givenOperatorToken(Operators.DIVISION));
+      memory.push(givenOperatorToken(Operators.DIVISION));
 
       fail("Calculator didn't throw the error");
     }
@@ -105,7 +105,7 @@ public class CalculatorTest {
       // we don't care about the error here, just that we got here.
     }
     finally {
-      final List<BigDecimal> state = calc.getState();
+      final List<BigDecimal> state = memory.getState();
       assertThat(state.size(), is(2));
 
       assertThat(state.get(0), is(new BigDecimal(1)));

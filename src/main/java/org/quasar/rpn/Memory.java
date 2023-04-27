@@ -16,10 +16,10 @@ import org.quasar.rpn.tokens.NumberToken;
 import org.quasar.rpn.tokens.OperatorToken;
 import org.quasar.rpn.tokens.Token;
 
-public class Calculator {
-  private Stack<Operation> operations;
+public class Memory {
+  private final Stack<Operation> operations;
 
-  public Calculator() {
+  public Memory() {
     this.operations = new Stack<>();
   }
 
