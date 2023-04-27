@@ -42,7 +42,7 @@ public class BiOperandArithmeticOperation extends ArithmeticOperation {
           return a.getValue().multiply(b.getValue());
 
         case DIVISION:
-          return new BigDecimal(a.getValue().doubleValue() / b.getValue().doubleValue());
+          return BigDecimal.valueOf(a.getValue().doubleValue() / b.getValue().doubleValue());
       }
     }
     catch (Exception e) {
