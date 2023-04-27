@@ -10,7 +10,7 @@ public class RpnCalculator {
     final Scanner scanner = new Scanner(System.in);
     final Lexer lexer = new Lexer();
     final Memory memory = new Memory();
-    final CalculatorReporter reporter = new CalculatorReporter();
+    final Reporter reporter = new Reporter();
 
     /*
      * This sort of problem is more suited to a Event Driven/Reactive/Streaming approach.

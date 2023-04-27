@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.quasar.rpn.tokens.InvalidInputToken;
 import org.quasar.rpn.tokens.OperatorToken;
 
-public class CalculatorReporter {
+public class Reporter {
   public static final DecimalFormat FORMATTER = new DecimalFormat("#.##########");
 
   public String format(final BigDecimal number) {

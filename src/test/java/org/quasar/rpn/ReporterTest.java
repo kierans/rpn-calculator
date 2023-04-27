@@ -14,8 +14,8 @@ import org.quasar.rpn.tokens.InvalidInputToken;
 import org.quasar.rpn.tokens.OperatorToken;
 import org.quasar.rpn.tokens.OperatorToken.Operators;
 
-public class CalculatorReporterTest {
-  private CalculatorReporter reporter = new CalculatorReporter();
+public class ReporterTest {
+  private Reporter reporter = new Reporter();
 
   @Test
   public void shouldFormatNumbersToTenDecimalPlaces() {
