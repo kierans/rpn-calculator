@@ -3,10 +3,8 @@ package org.quasar.rpn.operations;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.quasar.rpn.Memory;
-
 /**
- * An Operation is a record of an operation performed on a {@link Memory}.
+ * An Operation is a record of a mathematical operation
  */
 public interface Operation {
   /**
