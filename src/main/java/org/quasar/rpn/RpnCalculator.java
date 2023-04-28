@@ -1,5 +1,6 @@
 package org.quasar.rpn;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -15,7 +16,13 @@ public class RpnCalculator {
      * This is the simplest solution, but wouldn't be suited to a high volume environment.
      */
     while (true) {
-      System.out.println(String.join("\n", calculator.calculate(scanner.nextLine())));
+      try {
+        System.out.println(String.join("\n", calculator.calculate(scanner.nextLine())));
+      }
+      catch (NoSuchElementException e) {
+        // ignore, it's the scanner closing
+        break;
+      }
     }
   }
 }

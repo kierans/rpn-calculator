@@ -34,7 +34,6 @@ Uses Java 8.
 ### Run
 
 ```bash
-$ ./gradlew build
 $ ./rpn-calculator.sh
 ```
 
