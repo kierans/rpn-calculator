@@ -7,12 +7,12 @@ The calculator has a stack that contains real numbers.
  - The calculator waits for user input and expects to receive strings containing whitespace separated lists of numbers 
  and operators.
  - Numbers are pushed on to the stack. Operators operate on numbers that are on the stack.
- - Available operators are +, -, *, /, sqrt, undo, clear.
+ - Available operators are `+`, `-`, `*`, `/`, `sqrt`, `undo`, `clear`.
  - Operators pop their parameters off the stack, and push their results back onto the stack.
- - The 'clear' operator removes all items from the stack.
- - The 'undo' operator undoes the previous operation. "undo undo" will undo the previous two operations.
- - sqrt performs a square root on the top item from the stack.
- - The '+', '-', '*', '/' operators perform addition, subtraction, multiplication and division respectively on the top two items from the stack.
+ - The `clear` operator removes all items from the stack.
+ - The `undo` operator undoes the previous operation. `undo undo` will undo the previous two operations.
+ - `sqrt` performs a square root on the top item from the stack.
+ - The `+`, `-`, `*`, `/` operators perform addition, subtraction, multiplication and division respectively on the top two items from the stack.
  - After processing an input string, the calculator displays the current contents of the stack as a space-separated 
  list.
  - Numbers are stored on the stack to at least 15 decimal places of precision, but displayed to 10 decimal places
