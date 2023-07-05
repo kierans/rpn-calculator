@@ -19,7 +19,7 @@ import org.quasar.rpn.tokens.OperatorToken;
 import org.quasar.rpn.tokens.Token;
 
 public class LexerTest {
-  private Lexer lexer = new Lexer();
+  private final Lexer lexer = new Lexer();
 
   @Test
   public void shouldParseNumberToken() {
@@ -93,11 +93,11 @@ public class LexerTest {
   }
 
   private static class TokenMatcher extends TypeSafeMatcher<Token> {
-    private final Class tokenType;
+    private final Class<?> tokenType;
     private final String tokenValue;
     private final int tokenPos;
 
-    public TokenMatcher(final Class tokenType, final String tokenValue, final int tokenPos) {
+    public TokenMatcher(final Class<?> tokenType, final String tokenValue, final int tokenPos) {
       this.tokenType = tokenType;
       this.tokenValue = tokenValue;
       this.tokenPos = tokenPos;
