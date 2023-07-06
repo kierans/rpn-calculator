@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class LexerTest {
 
     List<Token> tokens = lexer.tokenise(value);
 
-    assertThat(tokens, hasItem(isNumberToken("45", 1)));
+    assertThat(tokens, hasItem(isNumberToken(new BigDecimal("45"), "45", 1)));
   }
 
   @Test
@@ -37,7 +38,7 @@ public class LexerTest {
     Arrays.stream(commands).forEach((cmd) -> {
       List<Token> tokens = lexer.tokenise(cmd);
 
-      assertThat(tokens, hasItem(isCommandToken(cmd, 1)));
+      assertThat(tokens, hasItem(isCommandToken(CommandToken.Commands.fromValue(cmd), cmd, 1)));
     });
   }
 
@@ -48,7 +49,7 @@ public class LexerTest {
     Arrays.stream(operators).forEach((op) -> {
       List<Token> tokens = lexer.tokenise(op);
 
-      assertThat(tokens, hasItem(isOperatorToken(op, 1)));
+      assertThat(tokens, hasItem(isOperatorToken(OperatorToken.Operators.fromValue(op), op, 1)));
     });
   }
 
@@ -71,21 +72,29 @@ public class LexerTest {
     List<Token> tokens = lexer.tokenise(String.join(" ", input));
 
     assertThat(tokens.size(), is(3));
-    assertThat(tokens.get(0), isCommandToken(input[0], 1));
-    assertThat(tokens.get(1), isNumberToken(input[1], 7));
-    assertThat(tokens.get(2), isOperatorToken(input[2], 9));
+    assertThat(tokens.get(0), isCommandToken(CommandToken.Commands.CLEAR, input[0], 1));
+    assertThat(tokens.get(1), isNumberToken(new BigDecimal("4"), input[1], 7));
+    assertThat(tokens.get(2), isOperatorToken(OperatorToken.Operators.ADDITION, input[2], 9));
   }
 
-  private Matcher<? super Token> isNumberToken(final String tokenValue, final int tokenPos) {
-    return new TokenMatcher(NumberToken.class, tokenValue, tokenPos);
+  private Matcher<? super Token> isNumberToken(final BigDecimal number, final String tokenValue, final int tokenPos) {
+    return new NumberTokenMatcher(number, tokenValue, tokenPos);
   }
 
-  private Matcher<? super Token> isCommandToken(final String tokenValue, final int tokenPos) {
-    return new TokenMatcher(CommandToken.class, tokenValue, tokenPos);
+  private Matcher<? super Token> isCommandToken(
+      final CommandToken.Commands command,
+      final String tokenValue,
+      final int tokenPos
+  ) {
+    return new CommandTokenMatcher(command, tokenValue, tokenPos);
   }
 
-  private Matcher<? super Token> isOperatorToken(final String tokenValue, final int tokenPos) {
-    return new TokenMatcher(OperatorToken.class, tokenValue, tokenPos);
+  private Matcher<? super Token> isOperatorToken(
+    final OperatorToken.Operators operator,
+    final String tokenValue,
+    final int tokenPos
+  ) {
+    return new OperatorTokenMatcher(operator, tokenValue, tokenPos);
   }
 
   private Matcher<? super Token> withInvalidInputToken(final String tokenValue, final int tokenPos) {
@@ -93,11 +102,11 @@ public class LexerTest {
   }
 
   private static class TokenMatcher extends TypeSafeMatcher<Token> {
-    private final Class<?> tokenType;
-    private final String tokenValue;
-    private final int tokenPos;
+    protected final Class<?> tokenType;
+    protected final String tokenValue;
+    protected final int tokenPos;
 
-    public TokenMatcher(final Class<?> tokenType, final String tokenValue, final int tokenPos) {
+    public TokenMatcher(final Class<? extends Token> tokenType, final String tokenValue, final int tokenPos) {
       this.tokenType = tokenType;
       this.tokenValue = tokenValue;
       this.tokenPos = tokenPos;
@@ -114,7 +123,87 @@ public class LexerTest {
 
     @Override
     public void describeTo(final Description description) {
-      description.appendText(String.format("%s('%s', %d)", tokenType.getSimpleName(), tokenValue, tokenPos));
+      description.appendText(description());
+    }
+
+    public String description() {
+      return String.format("%s('%s', %d)", tokenType.getSimpleName(), tokenValue, tokenPos);
+    }
+  }
+
+  private static class CommandTokenMatcher extends TokenMatcher {
+    private final CommandToken.Commands command;
+
+    public CommandTokenMatcher(
+      final CommandToken.Commands command,
+      final String tokenValue,
+      final int tokenPos
+    ) {
+      super(CommandToken.class, tokenValue, tokenPos);
+
+      this.command = command;
+    }
+
+    @Override
+    protected boolean matchesSafely(final Token token) {
+      final CommandToken commandToken = (CommandToken) token;
+
+      assertThat(commandToken.command, is(command));
+
+      return super.matchesSafely(token);
+    }
+
+    @Override
+    public String description() {
+      return String.format("%s('%s', %d, %s)", tokenType.getSimpleName(), tokenValue, tokenPos, command);
+    }
+  }
+
+  private static class NumberTokenMatcher extends TokenMatcher {
+    private final BigDecimal number;
+
+    public NumberTokenMatcher(final BigDecimal number, final String tokenValue, final int tokenPos) {
+      super(NumberToken.class, tokenValue, tokenPos);
+
+      this.number = number;
+    }
+
+    @Override
+    protected boolean matchesSafely(final Token token) {
+      final NumberToken commandToken = (NumberToken) token;
+
+      assertThat(commandToken.number, is(number));
+
+      return super.matchesSafely(token);
+    }
+
+    @Override
+    public String description() {
+      return String.format("%s('%s', %d, %f)", tokenType.getSimpleName(), tokenValue, tokenPos, number);
+    }
+  }
+
+  private static class OperatorTokenMatcher extends TokenMatcher {
+    private final OperatorToken.Operators operator;
+
+    public OperatorTokenMatcher(final OperatorToken.Operators operator, final String tokenValue, final int tokenPos) {
+      super(OperatorToken.class, tokenValue, tokenPos);
+
+      this.operator = operator;
+    }
+
+    @Override
+    protected boolean matchesSafely(final Token token) {
+      OperatorToken operatorToken = (OperatorToken) token;
+
+      assertThat(operatorToken.op, is(operator));
+
+      return super.matchesSafely(token);
+    }
+
+    @Override
+    public String description() {
+      return super.description();
     }
   }
 }

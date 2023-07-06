@@ -1,5 +1,7 @@
 package org.quasar.rpn.tokens;
 
+import java.util.Arrays;
+
 import lombok.ToString;
 
 @ToString(callSuper = true)
@@ -13,6 +15,13 @@ public class CommandToken extends Token {
 
     Commands(final String token) {
       this.token = token;
+    }
+
+    public static Commands fromValue(String value) {
+      return Arrays.stream(values())
+        .filter((item) -> value.equals(item.token))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException(String.format("%s is not a valid command", value)));
     }
   }
 

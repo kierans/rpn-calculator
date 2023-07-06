@@ -1,5 +1,7 @@
 package org.quasar.rpn.tokens;
 
+import java.util.Arrays;
+
 import lombok.ToString;
 
 @ToString(callSuper = true)
@@ -16,6 +18,13 @@ public class OperatorToken extends Token {
 
     Operators(final String token) {
       this.token = token;
+    }
+
+    public static OperatorToken.Operators fromValue(String value) {
+      return Arrays.stream(values())
+        .filter((item) -> value.equals(item.token))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException(String.format("%s is not a valid operator", value)));
     }
   }
 
