@@ -28,7 +28,7 @@ public class LexerTest {
 
     List<Token> tokens = lexer.tokenise(value);
 
-    assertThat(tokens, hasItem(isNumberToken(new BigDecimal("45"), "45", 1)));
+    assertThat(tokens, hasItem(isNumberToken(new BigDecimal(value), value, 1)));
   }
 
   @Test
