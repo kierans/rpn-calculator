@@ -23,13 +23,20 @@ public class Lexer {
   public List<Token> tokenise(final String input) {
     reset();
 
-    return Arrays.stream(input.split(" "))
-      .map(this::lexToken)
-      .map(this::determineTokenType)
+    return splitIntoWords(input)
+      .map(this::tokeniseWord)
       .collect(Collectors.toList());
   }
 
-  private Token lexToken(final String input) {
+  private static Stream<String> splitIntoWords(final String input) {
+    return Arrays.stream(input.split(" "));
+  }
+
+  private Token tokeniseWord(final String input) {
+    return determineTokenType(createRawToken(input));
+  }
+
+  private Token createRawToken(final String input) {
     final Token token = new Token(input, pos);
 
     // add one to cater for the ' '
