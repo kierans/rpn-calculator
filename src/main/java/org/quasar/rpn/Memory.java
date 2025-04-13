@@ -57,7 +57,7 @@ public class Memory {
   public void push(final CommandToken token) {
     switch (token.command) {
       case UNDO:
-        if (operations.size() > 0) {
+        if (!operations.isEmpty()) {
           undoOperation(operations.pop());
         }
 
@@ -91,7 +91,7 @@ public class Memory {
   }
 
   private void doUniOperandOperation(final OperatorToken token) {
-    if (operations.size() < 1) {
+    if (operations.isEmpty()) {
       throw new InsufficientOperatorParametersException(token);
     }
 
