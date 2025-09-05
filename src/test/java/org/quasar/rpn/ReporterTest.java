@@ -15,15 +15,15 @@ import org.quasar.rpn.tokens.OperatorToken;
 import org.quasar.rpn.tokens.OperatorToken.Operators;
 
 public class ReporterTest {
-  private Reporter reporter = new Reporter();
+  private final Reporter reporter = new Reporter();
 
   @Test
   public void shouldFormatNumbersToTenDecimalPlaces() {
-    assertThat(reporter.format(new BigDecimal(3.141592653589793)), is("3.1415926536"));
+    assertThat(reporter.format(new BigDecimal("3.141592653589793")), is("3.1415926536"));
 
     // check rounding around the 10th digit
-    assertThat(reporter.format(new BigDecimal(3.141592653559793)), is("3.1415926536"));
-    assertThat(reporter.format(new BigDecimal(3.141592653549793)), is("3.1415926535"));
+    assertThat(reporter.format(new BigDecimal("3.141592653559793")), is("3.1415926536"));
+    assertThat(reporter.format(new BigDecimal("3.141592653549793")), is("3.1415926535"));
   }
 
   @Test
