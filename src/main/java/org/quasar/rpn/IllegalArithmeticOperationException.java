@@ -6,7 +6,7 @@ public class IllegalArithmeticOperationException extends RuntimeException {
   public final Operation operation;
 
   public IllegalArithmeticOperationException(final Operation operation, final Throwable cause) {
-    super(String.format("'%s' is illegal arithmetic operation", operation.asExpression()), cause);
+    super(String.format("'%s' is an illegal arithmetic operation", operation.asExpression()), cause);
 
     this.operation = operation;
   }
