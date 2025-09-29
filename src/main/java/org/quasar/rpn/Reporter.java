@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.quasar.rpn.tokens.InvalidInputToken;
-import org.quasar.rpn.tokens.OperatorToken;
 
 public class Reporter {
   public static final DecimalFormat FORMATTER = new DecimalFormat("#.##########");
@@ -16,9 +15,7 @@ public class Reporter {
   }
 
   public String format(final InsufficientOperatorParametersException ex) {
-    final OperatorToken operatorToken = ex.operatorToken;
-
-    return String.format("operator %s (position: %d): insufficient parameters", operatorToken.input, operatorToken.position);
+    return String.format("operator %s (position: %d): insufficient parameters", ex.token.input, ex.token.position);
   }
 
   public String format(final IllegalArithmeticOperationException e) {
