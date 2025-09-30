@@ -5,8 +5,6 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.quasar.rpn.tokens.InvalidInputToken;
-
 public class Reporter {
   public static final DecimalFormat FORMATTER = new DecimalFormat("#.##########");
 
@@ -19,17 +17,15 @@ public class Reporter {
   }
 
   public String format(final IllegalArithmeticOperationException e) {
-    return "operation '" + e.operation.asExpression() + "' is illegal";
+    return String.format("operation '%s' is illegal", e.operation.asExpression());
   }
 
   public String format(final InvalidInputException ex) {
-    final InvalidInputToken token = ex.token;
-
-    return String.format("invalid input (position: %d): '%s'", token.position, token.input);
+    return String.format("invalid input (position: %d): '%s'", ex.token.position, ex.token.input);
   }
 
   public String format(final List<BigDecimal> state) {
-    final String stack = state.stream().map(FORMATTER::format).collect(Collectors.joining(" "));
+    final String stack = state.stream().map(this::format).collect(Collectors.joining(" "));
 
     return String.format("stack: %s", stack);
   }

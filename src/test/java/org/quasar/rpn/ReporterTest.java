@@ -2,6 +2,8 @@ package org.quasar.rpn;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.quasar.rpn.TokenFactory.givenInvalidInput;
+import static org.quasar.rpn.TokenFactory.givenOperatorToken;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -10,7 +12,6 @@ import java.util.List;
 import org.junit.Test;
 import org.quasar.rpn.operations.Operation;
 import org.quasar.rpn.operations.OperationFactory;
-import org.quasar.rpn.tokens.InvalidInputToken;
 import org.quasar.rpn.tokens.OperatorToken;
 import org.quasar.rpn.tokens.OperatorToken.Operators;
 
@@ -19,6 +20,8 @@ public class ReporterTest {
 
   @Test
   public void shouldFormatNumbersToTenDecimalPlaces() {
+    assertThat(reporter.format(new BigDecimal("4")), is("4"));
+    assertThat(reporter.format(new BigDecimal("4.00")), is("4"));
     assertThat(reporter.format(new BigDecimal("3.141592653589793")), is("3.1415926536"));
 
     // check rounding around the 10th digit
@@ -28,12 +31,12 @@ public class ReporterTest {
 
   @Test
   public void shouldFormatOperatorException() {
-    final OperatorToken operatorToken = new OperatorToken(Operators.MULTIPLICATION, "*", 45);
+    final OperatorToken operatorToken = givenOperatorToken(Operators.MULTIPLICATION);
     final InsufficientOperatorParametersException ex = new InsufficientOperatorParametersException(operatorToken);
 
     final String message = reporter.format(ex);
 
-    assertThat(message, is("operator * (position: 45): insufficient parameters"));
+    assertThat(message, is("operator * (position: -1): insufficient parameters"));
   }
 
   @Test
@@ -48,12 +51,11 @@ public class ReporterTest {
 
   @Test
   public void shouldFormatInvalidInputException() {
-    final InvalidInputToken token = new InvalidInputToken("foo", 23);
-    final InvalidInputException ex = new InvalidInputException(token);
+    final InvalidInputException ex = new InvalidInputException(givenInvalidInput());
 
     final String message = reporter.format(ex);
 
-    assertThat(message, is("invalid input (position: 23): 'foo'"));
+    assertThat(message, is("invalid input (position: -1): 'foo'"));
   }
 
   @Test
