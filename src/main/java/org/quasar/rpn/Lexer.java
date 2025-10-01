@@ -33,11 +33,7 @@ public class Lexer {
   }
 
   private Token tokeniseWord(final String input) {
-    return determineTokenType(createRawToken(input));
-  }
-
-  private Token createRawToken(final String input) {
-    final Token token = new Token(input, pos);
+    final Token token = createTokenFromWord(input, pos);
 
     // add one to cater for the ' '
     pos += input.length() + 1;
@@ -45,49 +41,48 @@ public class Lexer {
     return token;
   }
 
-  private Token determineTokenType(final Token rawToken) {
+  private Token createTokenFromWord(final String input, final int pos) {
+    return determineTokenType(input).apply(pos);
+  }
+
+  private Function<Integer, Token> determineTokenType(final String input) {
     /*
      * Pipe the raw token through a stream of functions, until we find the first token type that matches the input.
      */
-    final Stream<Function<Token, Optional<Token>>> tokenIdentifiers =
+    final Stream<Function<String, Optional<Function<Integer, Token>>>> tokenIdentifiers =
         Stream.of(this::isCommandToken, this::isOperatorToken, this::isNumberToken);
 
     return tokenIdentifiers
-        .map((fn) -> fn.apply(rawToken))
+        .map((fn) -> fn.apply(input))
         .filter(Optional::isPresent)
         .map(Optional::get)
         .findFirst()
-        .orElseGet(() -> this.invalidInput(rawToken));
+        .orElseGet(() -> (pos) -> new InvalidInputToken(input, pos));
   }
 
-  private Optional<Token> isCommandToken(final Token token) {
+  private Optional<Function<Integer, Token>> isCommandToken(final String input) {
     return Arrays.stream(CommandToken.Commands.values())
-      .filter((cmd) -> cmd.token.equals(token.input))
+      .filter((cmd) -> cmd.token.equals(input))
       .findFirst()
-      .map((cmd) -> new CommandToken(cmd, token.input, token.position));
+      .map((cmd) -> (pos) -> new CommandToken(cmd, input, pos));
   }
 
-  private Optional<Token> isOperatorToken(final Token token) {
+  private Optional<Function<Integer, Token>> isOperatorToken(final String input) {
     return Arrays.stream(OperatorToken.Operators.values())
-        .filter((op) -> op.token.equals(token.input))
+        .filter((op) -> op.token.equals(input))
         .findFirst()
-        .map((op) -> new OperatorToken(op, token.input, token.position));
+        .map((op) -> (pos) -> new OperatorToken(op, input, pos));
   }
 
-  private Optional<Token> isNumberToken(final Token rawToken) {
+  private Optional<Function<Integer, Token>> isNumberToken(final String input) {
     try {
-      final String input = rawToken.input;
       final BigDecimal number = new BigDecimal(input);
 
-      return Optional.of(new NumberToken(number, input, rawToken.position));
+      return Optional.of((pos) -> new NumberToken(number, input, pos));
     }
     catch (NumberFormatException e) {
       return Optional.empty();
     }
-  }
-
-  private Token invalidInput(final Token rawToken) {
-    return new InvalidInputToken(rawToken.input, rawToken.position);
   }
 
   private void reset() {
